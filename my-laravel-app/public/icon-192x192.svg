@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" fill="#dc3545"/>
+  <g fill="white">
+    <!-- QR Code icon -->
+    <rect x="40" y="40" width="112" height="112" fill="none" stroke="white" stroke-width="3"/>
+    <!-- Corner squares -->
+    <rect x="50" y="50" width="20" height="20" fill="white"/>
+    <rect x="122" y="50" width="20" height="20" fill="white"/>
+    <rect x="50" y="122" width="20" height="20" fill="white"/>
+    <!-- Center dots pattern -->
+    <rect x="80" y="80" width="6" height="6" fill="white"/>
+    <rect x="90" y="80" width="6" height="6" fill="white"/>
+    <rect x="100" y="80" width="6" height="6" fill="white"/>
+    <rect x="80" y="90" width="6" height="6" fill="white"/>
+    <rect x="100" y="90" width="6" height="6" fill="white"/>
+    <rect x="80" y="100" width="6" height="6" fill="white"/>
+    <rect x="90" y="100" width="6" height="6" fill="white"/>
+    <rect x="100" y="100" width="6" height="6" fill="white"/>
+  </g>
+</svg>
