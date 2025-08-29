@@ -1,45 +1,24 @@
-{{--
-/**
- * Layout Utama Aplikasi - Main Application Layout
- * 
- * File: resources/views/layouts/app.blade.php
- * Deskripsi: Template layout utama untuk semua halaman aplikasi
- * Fitur: Bootstrap 5.3, FontAwesome, Theme Maroon KPU, Responsive Design
- * 
- * Komponen yang disertakan:
- * - Meta tags dan SEO optimization
- * - Bootstrap CSS/JS framework
- * - FontAwesome icons dengan fallback
- * - Custom CSS theme (Maroon KPU colors)
- * - Navigation bar dengan logo KPU
- * - Footer dengan informasi sistem
- * - JavaScript utilities dan notifications
- * 
- * @author Sistem Manajemen Barang KPU
- * @version 1.0
- * @since August 2025
- */
---}}
+
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
     <head>
-        {{-- Basic Meta Tags --}}
+        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
         <meta name="description" content="Sistem Manajemen Barang KPU - Kelola inventaris dengan mudah">
         <meta name="theme-color" content="#dc2626">
 
-        {{-- Page Title --}}
-        <title>@yield('title', 'Sistem Manajemen Barang KPU JATENG')</title>
+        
+        <title><?php echo $__env->yieldContent('title', 'Sistem Manajemen Barang KPU JATENG'); ?></title>
 
-        {{-- Bootstrap CSS Framework --}}
+        
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         
-        {{-- FontAwesome Icons --}}
+        
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
         
-        {{-- FontAwesome Fallback Handler --}}
+        
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // Check if FontAwesome loaded
@@ -61,18 +40,18 @@
             });
         </script>
         
-        {{-- Preconnect untuk optimasi loading --}}
+        
         <link rel="preconnect" href="https://cdn.jsdelivr.net">
         <link rel="preconnect" href="https://cdnjs.cloudflare.com">
         
-        {{-- PWA Manifest --}}
+        
         <link rel="manifest" href="/manifest.json">
         
-        {{-- Favicon dan Apple Touch Icon --}}
-        <link rel="icon" href="{{ asset('logo-kpu.png') }}" type="image/png">
-        <link rel="apple-touch-icon" href="{{ asset('logo-kpu.png') }}">
         
-        {{-- Custom CSS Styles --}}
+        <link rel="icon" href="<?php echo e(asset('logo-kpu.png')); ?>" type="image/png">
+        <link rel="apple-touch-icon" href="<?php echo e(asset('logo-kpu.png')); ?>">
+        
+        
         <style>
             /* ====================================================================
                CSS VARIABLES - KPU MAROON THEME
@@ -989,69 +968,71 @@
             <!-- Navigation -->
             <nav class="navbar navbar-expand-lg navbar-dark shadow">
                 <div class="container">
-                    <a class="navbar-brand d-flex align-items-center" href="{{ Auth::check() ? route('dashboard') : route('login') }}">
+                    <a class="navbar-brand d-flex align-items-center" href="<?php echo e(Auth::check() ? route('dashboard') : route('login')); ?>">
                         <img src="https://jateng.kpu.go.id/assets/img/logo-kpu.png" alt="Logo KPU" class="me-2" style="height: 40px; width: auto;">
                         <span class="d-none d-sm-inline">SIMBA KPU JATENG</span>
                         <span class="d-sm-none">SIMBA KPU JATENG</span>
                     </a>
                     
-                    @auth
+                    <?php if(auth()->guard()->check()): ?>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <div class="navbar-nav ms-auto">
-                            <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                            <a class="nav-link <?php echo e(request()->routeIs('dashboard') ? 'active' : ''); ?>" href="<?php echo e(route('dashboard')); ?>">
                                 <i class="fas fa-tachometer-alt me-1"></i>
                                 <span class="d-lg-inline d-none">Dashboard</span>
                                 <span class="d-lg-none">Home</span>
                             </a>
-                            <a class="nav-link {{ request()->routeIs('items.*') ? 'active' : '' }}" href="{{ route('items.index') }}">
+                            <a class="nav-link <?php echo e(request()->routeIs('items.*') ? 'active' : ''); ?>" href="<?php echo e(route('items.index')); ?>">
                                 <i class="fas fa-box me-1"></i>Barang
                             </a>
-                            <a class="nav-link {{ request()->routeIs('rooms.*') ? 'active' : '' }}" href="{{ route('rooms.index') }}">
+                            <a class="nav-link <?php echo e(request()->routeIs('rooms.*') ? 'active' : ''); ?>" href="<?php echo e(route('rooms.index')); ?>">
                                 <i class="fas fa-door-open me-1"></i>Ruangan
                             </a>
-                            <a class="nav-link {{ request()->routeIs('qr-scan.*') ? 'active' : '' }}" href="{{ route('qr-scan.index') }}">
+                            <a class="nav-link <?php echo e(request()->routeIs('qr-scan.*') ? 'active' : ''); ?>" href="<?php echo e(route('qr-scan.index')); ?>">
                                 <i class="fas fa-qrcode me-1"></i>
                                 <span class="d-lg-inline d-none">Scan QR</span>
                                 <span class="d-lg-none">QR</span>
                             </a>
-                            @if(Auth::user()->is_admin)
-                            <a class="nav-link {{ request()->routeIs('admin.users.index') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                            <?php if(Auth::user()->is_admin): ?>
+                            <a class="nav-link <?php echo e(request()->routeIs('admin.users.index') ? 'active' : ''); ?>" href="<?php echo e(route('admin.users.index')); ?>">
                                 <i class="fas fa-user-shield me-1"></i>Kelola User
                             </a>
-                            @endif
-                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                                @csrf
+                            <?php endif; ?>
+                            <form action="<?php echo e(route('logout')); ?>" method="POST" class="d-inline">
+                                <?php echo csrf_field(); ?>
                                 <button type="submit" class="nav-link btn btn-link text-white" style="border: none;">
                                     <i class="fas fa-sign-out-alt me-1"></i>Logout
                                 </button>
                             </form>
                         </div>
                     </div>
-                    @endauth
+                    <?php endif; ?>
                 </div>
             </nav>
 
             <!-- Page Content -->
             <main>
-                @if(session('success'))
+                <?php if(session('success')): ?>
                     <div class="alert alert-success alert-dismissible fade show mx-3 mt-3" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+                        <i class="fas fa-check-circle me-2"></i><?php echo e(session('success')); ?>
+
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                @endif
+                <?php endif; ?>
                 
-                @if(session('error'))
+                <?php if(session('error')): ?>
                     <div class="alert alert-danger alert-dismissible fade show mx-3 mt-3" role="alert">
-                        <i class="fas fa-exclamation-triangle me-2"></i>{{ session('error') }}
+                        <i class="fas fa-exclamation-triangle me-2"></i><?php echo e(session('error')); ?>
+
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                @endif
+                <?php endif; ?>
                 
-                @yield('content')
+                <?php echo $__env->yieldContent('content'); ?>
             </main>
 
             <!-- Toast Container -->
@@ -1120,21 +1101,21 @@
             }
 
             // Check for flash messages and display them as toasts
-            @if(session('success'))
-                showToast('{{ session('success') }}', 'success');
-            @endif
+            <?php if(session('success')): ?>
+                showToast('<?php echo e(session('success')); ?>', 'success');
+            <?php endif; ?>
 
-            @if(session('error'))
-                showToast('{{ session('error') }}', 'error');
-            @endif
+            <?php if(session('error')): ?>
+                showToast('<?php echo e(session('error')); ?>', 'error');
+            <?php endif; ?>
 
-            @if(session('info'))
-                showToast('{{ session('info') }}', 'info');
-            @endif
+            <?php if(session('info')): ?>
+                showToast('<?php echo e(session('info')); ?>', 'info');
+            <?php endif; ?>
 
-            @if(session('warning'))
-                showToast('{{ session('warning') }}', 'warning');
-            @endif
+            <?php if(session('warning')): ?>
+                showToast('<?php echo e(session('warning')); ?>', 'warning');
+            <?php endif; ?>
         </script>
         
         <!-- Custom Scripts -->
@@ -1253,6 +1234,7 @@
             }
         </script>
         
-        @stack('scripts')
+        <?php echo $__env->yieldPushContent('scripts'); ?>
     </body>
 </html>
+<?php /**PATH C:\Users\umlog\Documents\GitHub\simbakpu1\resources\views/layouts/app.blade.php ENDPATH**/ ?>

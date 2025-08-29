@@ -20,30 +20,33 @@
  * @since August 2025
  */
 --}}
-@extends('layouts.app')
+@extends('layouts.app') {{-- Menggunakan layout aplikasi utama --}}
 
-@section('title', 'Detail Ruangan - ' . $room->name)
+@section('title', 'Detail Ruangan - ' . $room->name) {{-- Mengatur judul halaman dengan nama ruangan --}}
 
-@section('content')
-{{-- Page Header --}}
+@section('content') {{-- Memulai bagian konten utama --}}
+{{-- Bagian Header Halaman --}}
 <div class="page-header">
     <div class="container">
         <div class="row align-items-center">
             <div class="col">
+                {{-- Judul halaman: Nama Ruangan --}}
                 <h1 class="mb-0">
                     <i class="fas fa-door-open me-3"></i>
                     {{ $room->name }}
                 </h1>
+                {{-- Deskripsi singkat ruangan (lantai dan deskripsi) --}}
                 <p class="lead mb-0">
-                    @if($room->floor)
+                    @if($room->floor) {{-- Menampilkan lantai jika ada --}}
                         <i class="fas fa-building me-1"></i>{{ $room->floor }}
                     @endif
-                    @if($room->floor && $room->description) • @endif
-                    @if($room->description)
+                    @if($room->floor && $room->description) • @endif {{-- Pemisah jika ada lantai dan deskripsi --}}
+                    @if($room->description) {{-- Menampilkan deskripsi jika ada --}}
                         {{ Str::limit($room->description, 100) }}
                     @endif
                 </p>
             </div>
+            {{-- Tombol Kembali ke daftar ruangan --}}
             <div class="col-auto">
                 <a href="{{ route('rooms.index') }}" class="btn btn-light">
                     <i class="fas fa-arrow-left me-2"></i>
@@ -56,7 +59,7 @@
 
 <div class="container">
     <div class="row">
-        <!-- Room Info -->
+        {{-- Kolom Sidebar Informasi Ruangan --}}
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
@@ -66,18 +69,20 @@
                     </h6>
                 </div>
                 <div class="card-body">
+                    {{-- Ikon ruangan besar di tengah --}}
                     <div class="text-center mb-3">
                         <div class="display-4 text-warning">
                             <i class="fas fa-door-open"></i>
                         </div>
                     </div>
                     
+                    {{-- Tabel detail informasi ruangan --}}
                     <table class="table table-borderless table-sm">
                         <tr>
                             <td class="fw-bold text-muted">Nama:</td>
                             <td>{{ $room->name }}</td>
                         </tr>
-                        @if($room->floor)
+                        @if($room->floor) {{-- Menampilkan baris lantai jika ada --}}
                             <tr>
                                 <td class="fw-bold text-muted">Lantai:</td>
                                 <td>
@@ -105,7 +110,7 @@
                         </tr>
                     </table>
                     
-                    @if($room->description)
+                    @if($room->description) {{-- Menampilkan deskripsi lengkap jika ada --}}
                         <div class="border-top pt-3 mt-3">
                             <h6 class="fw-bold text-muted mb-2">Deskripsi:</h6>
                             <p class="text-muted">{{ $room->description }}</p>
@@ -114,7 +119,7 @@
                 </div>
             </div>
             
-            <!-- Actions -->
+            {{-- Card Aksi --}}
             <div class="card mt-3">
                 <div class="card-header">
                     <h6 class="mb-0">
@@ -124,21 +129,25 @@
                 </div>
                 <div class="card-body">
                     <div class="d-grid gap-2">
+                        {{-- Tombol Edit Ruangan --}}
                         <a href="{{ route('rooms.edit', $room->id) }}" class="btn btn-warning">
                             <i class="fas fa-edit me-2"></i>
                             Edit Ruangan
                         </a>
                         
+                        {{-- Tombol Tambah Barang di Ruangan Ini --}}
                         <a href="{{ route('items.create', ['room_id' => $room->id]) }}" class="btn btn-primary">
                             <i class="fas fa-plus me-2"></i>
                             Tambah Barang di Ruangan Ini
                         </a>
                         
+                        {{-- Tombol Cetak Daftar Barang --}}
                         <button type="button" class="btn btn-info" onclick="printRoomItems()">
                             <i class="fas fa-print me-2"></i>
                             Cetak Daftar Barang
                         </button>
                         
+                        {{-- Tombol Scan QR Code --}}
                         <a href="{{ route('qr-scan.index') }}" class="btn btn-outline-primary">
                             <i class="fas fa-qrcode me-2"></i>
                             Scan QR Code
@@ -146,6 +155,7 @@
                         
                         <hr>
                         
+                        {{-- Tombol Hapus Ruangan (kondisional: hanya bisa dihapus jika tidak ada barang) --}}
                         @if($room->items->count() == 0)
                             <button type="button" 
                                     class="btn btn-outline-danger"
@@ -165,7 +175,7 @@
             </div>
         </div>
         
-        <!-- Items List -->
+        {{-- Kolom utama untuk daftar barang di ruangan ini --}}
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
@@ -176,6 +186,7 @@
                                 Barang di Ruangan Ini ({{ $room->items->count() }})
                             </h6>
                         </div>
+                        {{-- Tombol Tambah Barang (langsung ke ruangan ini) --}}
                         <div class="col-auto">
                             <a href="{{ route('items.create', ['room_id' => $room->id]) }}" 
                                class="btn btn-primary btn-sm">
@@ -185,7 +196,8 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    @if($room->items->count() > 0)
+                    @if($room->items->count() > 0) {{-- Jika ada barang di ruangan ini --}}
+                        {{-- Tabel responsif untuk daftar barang --}}
                         <div class="table-responsive">
                             <table class="table table-hover">
                                 <thead>
@@ -199,7 +211,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($room->items as $index => $item)
+                                    @foreach($room->items as $index => $item) {{-- Loop untuk setiap barang --}}
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
                                             <td>
@@ -208,13 +220,14 @@
                                             <td><strong>{{ $item->brand }}</strong></td>
                                             <td>{{ $item->type }}</td>
                                             <td>
-                                                @if($item->description)
+                                                @if($item->description) {{-- Menampilkan deskripsi barang (dibatasi 40 karakter) --}}
                                                     <span class="text-muted">{{ Str::limit($item->description, 40) }}</span>
                                                 @else
                                                     <span class="text-muted font-italic">-</span>
                                                 @endif
                                             </td>
                                             <td>
+                                                {{-- Grup tombol aksi (Lihat dan Edit) --}}
                                                 <div class="btn-group" role="group">
                                                     <a href="{{ route('items.show', $item->id) }}" 
                                                        class="btn btn-outline-primary btn-sm"
@@ -233,7 +246,8 @@
                                 </tbody>
                             </table>
                         </div>
-                    @else
+                    @else {{-- Jika tidak ada barang di ruangan ini --}}
+                        {{-- Tampilan kosong dan tombol untuk menambahkan barang --}}
                         <div class="text-center py-5">
                             <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
                             <h6 class="text-muted">Belum ada barang di ruangan ini</h6>
@@ -255,7 +269,7 @@
     </div>
 </div>
 
-<!-- Delete Modal -->
+{{-- Modal Konfirmasi Hapus (hanya ditampilkan jika ruangan tidak memiliki barang) --}}
 @if($room->items->count() == 0)
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog">
@@ -268,6 +282,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
+                {{-- Peringatan bahwa tindakan tidak dapat dibatalkan --}}
                 <div class="alert alert-danger">
                     <h6><i class="fas fa-warning me-2"></i>Peringatan!</h6>
                     <p class="mb-0">Tindakan ini tidak dapat dibatalkan. Ruangan akan dihapus secara permanen dari sistem.</p>
@@ -275,6 +290,7 @@
                 
                 <p>Apakah Anda yakin ingin menghapus ruangan <strong>{{ $room->name }}</strong>?</p>
                 
+                {{-- Detail ruangan yang akan dihapus --}}
                 <div class="card">
                     <div class="card-body">
                         <table class="table table-sm table-borderless mb-0">
@@ -297,12 +313,14 @@
                 </div>
             </div>
             <div class="modal-footer">
+                {{-- Tombol Batal --}}
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fas fa-times me-1"></i>Batal
                 </button>
+                {{-- Form untuk mengirim permintaan DELETE --}}
                 <form action="{{ route('rooms.destroy', $room->id) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
+                    @csrf {{-- Token CSRF untuk keamanan form --}}
+                    @method('DELETE') {{-- Metode DELETE untuk menghapus resource --}}
                     <button type="submit" class="btn btn-danger">
                         <i class="fas fa-trash me-1"></i>Ya, Hapus Ruangan
                     </button>
@@ -312,10 +330,11 @@
     </div>
 </div>
 @endif
-@endsection
+@endsection {{-- Mengakhiri bagian konten utama --}}
 
-@push('scripts')
+@push('scripts') {{-- Memulai bagian JavaScript --}}
 <script>
+// Fungsi untuk mencetak daftar barang di ruangan ini
 function printRoomItems() {
     const roomName = '{{ $room->name }}';
     const roomFloor = '{{ $room->floor }}';
@@ -324,6 +343,7 @@ function printRoomItems() {
 
     let itemsTableHtml = '';
     if (items.length > 0) {
+        // Membuat tabel HTML untuk daftar barang jika ada
         itemsTableHtml = `
             <h3>Daftar Barang</h3>
             <table class="print-table">
@@ -354,10 +374,10 @@ function printRoomItems() {
             </table>
         `;
     } else {
-        itemsTableHtml = '<p>Tidak ada barang di ruangan ini.</p>';
+        itemsTableHtml = '<p>Tidak ada barang di ruangan ini.</p>'; // Pesan jika tidak ada barang
     }
 
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open('', '_blank'); // Membuka jendela baru untuk cetak
     if (printWindow) {
         printWindow.document.write(`
             <html>
@@ -431,8 +451,8 @@ function printRoomItems() {
                     </div>
                     <div class="room-info">
                         <p><strong>Nama Ruangan:</strong> ${roomName}</p>
-                        ${roomFloor ? '<p><strong>Lantai:</strong> ' + roomFloor + '</p>' : ''}
-                        ${roomDescription ? '<p><strong>Deskripsi:</strong> ' + roomDescription + '</p>' : ''}
+                        ${roomFloor ? '<p><strong>Lantai:</strong> ' + roomFloor + '</p>' : ''} {{-- Menampilkan lantai jika ada --}}
+                        ${roomDescription ? '<p><strong>Deskripsi:</strong> ' + roomDescription + '</p>' : ''} {{-- Menampilkan deskripsi jika ada --}}
                     </div>
                     ${itemsTableHtml}
                     <div class="footer">
@@ -446,8 +466,8 @@ function printRoomItems() {
         printWindow.print();
         printWindow.close();
     } else {
-        showToast('Gagal membuka jendela cetak.', 'error');
+        showToast('Gagal membuka jendela cetak.', 'error'); // Menampilkan pesan error jika gagal membuka jendela cetak
     }
 }
 </script>
-@endpush
+@endpush {{-- Mengakhiri bagian JavaScript --}}

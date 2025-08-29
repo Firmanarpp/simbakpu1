@@ -178,31 +178,34 @@
 
 @push('scripts')
 <script>
+    // Pastikan DOM sudah dimuat sepenuhnya sebelum menjalankan skrip
     document.addEventListener('DOMContentLoaded', function() {
+        // Mendapatkan referensi ke elemen input form
         const nameInput = document.getElementById('name');
         const floorInput = document.getElementById('floor');
         const descriptionInput = document.getElementById('description');
         const form = document.querySelector('form');
 
-        // Helper function to show validation error
+        // Fungsi helper untuk menampilkan pesan error validasi
         function showValidationError(inputElement, message) {
-            inputElement.classList.add('is-invalid');
+            inputElement.classList.add('is-invalid'); // Tambah kelas untuk styling error
             const errorElement = document.getElementById(inputElement.id + '-error');
             if (errorElement) {
-                errorElement.textContent = message;
+                errorElement.textContent = message; // Tampilkan pesan error
             }
         }
 
-        // Helper function to clear validation error
+        // Fungsi helper untuk menghapus pesan error validasi
         function clearValidationError(inputElement) {
-            inputElement.classList.remove('is-invalid');
+            inputElement.classList.remove('is-invalid'); // Hapus kelas styling error
             const errorElement = document.getElementById(inputElement.id + '-error');
             if (errorElement) {
-                errorElement.textContent = '';
+                errorElement.textContent = ''; // Kosongkan pesan error
             }
         }
 
-        // Add real-time validation listeners
+        // Menambahkan listener untuk validasi real-time saat input berubah
+        // Validasi untuk input Nama Ruangan
         nameInput.addEventListener('input', function() {
             if (nameInput.value.trim() === '') {
                 showValidationError(nameInput, 'Nama ruangan wajib diisi.');
@@ -213,6 +216,7 @@
             }
         });
 
+        // Validasi untuk input Lantai
         floorInput.addEventListener('input', function() {
             if (floorInput.value.length > 255) {
                 showValidationError(floorInput, 'Lantai tidak boleh lebih dari 255 karakter.');
@@ -221,6 +225,7 @@
             }
         });
 
+        // Validasi untuk input Deskripsi
         descriptionInput.addEventListener('input', function() {
             if (descriptionInput.value.length > 0 && descriptionInput.value.length > 1000) {
                 showValidationError(descriptionInput, 'Deskripsi tidak boleh lebih dari 1000 karakter.');
@@ -228,23 +233,11 @@
                 clearValidationError(descriptionInput);
             }
         });
-
-        // Auto-capitalize first letter of room name
-        nameInput.addEventListener('input', function() {
-            const words = this.value.split(' ');
-            const capitalizedWords = words.map(word => {
-                if (word.length > 0) {
-                    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-                }
-                return word;
-            });
-            this.value = capitalizedWords.join(' ');
-        });
         
-        // Auto-suggest floor based on common patterns
+        // Data untuk saran otomatis pada input Lantai
         const suggestions = ['Lantai 1', 'Lantai 2', 'Lantai 3', 'Ground Floor', 'Basement'];
         
-        // Add datalist for floor suggestions
+        // Membuat elemen datalist untuk saran lantai
         const datalist = document.createElement('datalist');
         datalist.id = 'floor-suggestions';
         suggestions.forEach(suggestion => {
@@ -252,13 +245,16 @@
             option.value = suggestion;
             datalist.appendChild(option);
         });
+        // Menambahkan datalist ke body dokumen
         document.body.appendChild(datalist);
+        // Mengaitkan datalist dengan input Lantai
         floorInput.setAttribute('list', 'floor-suggestions');
 
-        // Form submission validation
+        // Validasi saat form disubmit
         form.addEventListener('submit', function(e) {
-            let isValid = true;
+            let isValid = true; // Flag untuk status validasi form
 
+            // Validasi akhir untuk Nama Ruangan
             if (nameInput.value.trim() === '') {
                 showValidationError(nameInput, 'Nama ruangan wajib diisi.');
                 isValid = false;
@@ -269,6 +265,7 @@
                 clearValidationError(nameInput);
             }
 
+            // Validasi akhir untuk Lantai
             if (floorInput.value.length > 255) {
                 showValidationError(floorInput, 'Lantai tidak boleh lebih dari 255 karakter.');
                 isValid = false;
@@ -276,6 +273,7 @@
                 clearValidationError(floorInput);
             }
 
+            // Validasi akhir untuk Deskripsi
             if (descriptionInput.value.length > 0 && descriptionInput.value.length > 1000) {
                 showValidationError(descriptionInput, 'Deskripsi tidak boleh lebih dari 1000 karakter.');
                 isValid = false;
@@ -283,11 +281,12 @@
                 clearValidationError(descriptionInput);
             }
 
+            // Jika ada input yang tidak valid, cegah form untuk disubmit dan scroll ke input pertama yang bermasalah
             if (!isValid) {
-                e.preventDefault();
+                e.preventDefault(); // Mencegah pengiriman form
                 const firstInvalid = document.querySelector('.is-invalid');
                 if (firstInvalid) {
-                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll ke elemen yang tidak valid
                 }
             }
         });

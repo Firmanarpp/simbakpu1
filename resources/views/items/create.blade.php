@@ -19,24 +19,27 @@
  * @since August 2025
  */
 --}}
-@extends('layouts.app')
+@extends('layouts.app') {{-- Menggunakan layout aplikasi utama --}}
 
-@section('title', 'Tambah Barang - Sistem Manajemen Barang Kantor')
+@section('title', 'Tambah Barang - Sistem Manajemen Barang Kantor') {{-- Mengatur judul halaman --}}
 
-@section('content')
-{{-- Page Header --}}
+@section('content') {{-- Memulai bagian konten utama --}}
+{{-- Bagian Header Halaman --}}
 <div class="page-header">
     <div class="container">
         <div class="row align-items-center">
             <div class="col">
+                {{-- Judul halaman untuk tampilan desktop dan mobile --}}
                 <h1 class="mb-0">
                     <i class="fas fa-plus-circle me-2 d-none d-md-inline"></i>
                     <span class="d-md-none">➕</span>
                     Tambah Barang
                 </h1>
+                {{-- Deskripsi halaman untuk tampilan desktop dan mobile --}}
                 <p class="lead mb-0 d-none d-md-block">Tambahkan barang baru ke dalam sistem inventori</p>
                 <p class="mb-0 d-md-none"><small>Tambah barang baru</small></p>
             </div>
+            {{-- Tombol kembali ke daftar barang --}}
             <div class="col-auto">
                 <a href="{{ route('items.index') }}" class="btn btn-light btn-sm">
                     <i class="fas fa-arrow-left me-1 d-none d-sm-inline"></i>
@@ -52,6 +55,7 @@
     <div class="row justify-content-center">
         <div class="col-12 col-lg-8">
             <div class="card">
+                {{-- Header card form --}}
                 <div class="card-header bg-gradient-maroon text-white">
                     <h5 class="mb-0">
                         <i class="fas fa-form me-2"></i>
@@ -59,6 +63,7 @@
                     </h5>
                 </div>
                 <div class="card-body p-3">
+                    {{-- Menampilkan pesan info dari session jika ada --}}
                     @if(session('info'))
                         <div class="alert alert-info alert-dismissible fade show" role="alert">
                             <i class="fas fa-info-circle me-2"></i>
@@ -68,6 +73,7 @@
                         </div>
                     @endif
                     
+                    {{-- Menampilkan alert jika QR Code berasal dari hasil scan --}}
                     @if(isset($qrCode) && $qrCode)
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                             <i class="fas fa-qrcode me-2"></i>
@@ -81,10 +87,11 @@
                         </div>
                     @endif
                     
+                    {{-- Form untuk menambahkan barang baru --}}
                     <form action="{{ route('items.store') }}" method="POST" novalidate>
-                        @csrf
+                        @csrf {{-- Token CSRF untuk keamanan form --}}
                         
-                        <!-- QR Code -->
+                        {{-- Input untuk Kode QR --}}
                         <div class="mb-3">
                             <label for="qr_code" class="form-label">
                                 <i class="fas fa-qrcode me-1"></i>
@@ -95,10 +102,11 @@
                                        class="form-control @error('qr_code') is-invalid @enderror" 
                                        id="qr_code" 
                                        name="qr_code" 
-                                       value="{{ old('qr_code', $qrCode ?? '') }}"
+                                       value="{{ old('qr_code', $qrCode ?? '') }}" {{-- Mengisi nilai lama atau dari scan --}}
                                        placeholder="Masukkan kode QR barang"
                                        required
                                        maxlength="255">
+                                {{-- Tombol untuk membuka scanner QR Code --}}
                                 <button class="btn btn-outline-maroon" 
                                         type="button" 
                                         id="qr-scan-btn"
@@ -108,11 +116,13 @@
                                     <span class="d-none d-sm-inline ms-1">Scan</span>
                                 </button>
                             </div>
+                            {{-- Menampilkan pesan error validasi untuk qr_code --}}
                             @error('qr_code')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @else
                                 <div class="invalid-feedback" id="qr_code-error"></div>
                             @enderror
+                            {{-- Teks informasi tambahan untuk Kode QR --}}
                             <div class="form-text">
                                 <i class="fas fa-info-circle me-1"></i>
                                 Kode QR harus unik untuk setiap barang. 
@@ -120,7 +130,7 @@
                             </div>
                         </div>
 
-                        <!-- Brand -->
+                        {{-- Input untuk Merk Barang --}}
                         <div class="mb-3">
                             <label for="brand" class="form-label">
                                 <i class="fas fa-tag me-1"></i>
@@ -130,10 +140,11 @@
                                    class="form-control @error('brand') is-invalid @enderror" 
                                    id="brand" 
                                    name="brand" 
-                                   value="{{ old('brand') }}"
+                                   value="{{ old('brand') }}" {{-- Mengisi nilai lama --}}
                                    placeholder="Contoh: Dell, HP, Canon, dsb"
                                    required
                                    maxlength="255">
+                            {{-- Menampilkan pesan error validasi untuk brand --}}
                             @error('brand')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @else
@@ -141,7 +152,7 @@
                             @enderror
                         </div>
 
-                        <!-- Type -->
+                        {{-- Input untuk Tipe Barang --}}
                         <div class="mb-3">
                             <label for="type" class="form-label">
                                 <i class="fas fa-cube me-1"></i>
@@ -151,10 +162,11 @@
                                    class="form-control @error('type') is-invalid @enderror" 
                                    id="type" 
                                    name="type" 
-                                   value="{{ old('type') }}"
+                                   value="{{ old('type') }}" {{-- Mengisi nilai lama --}}
                                    placeholder="Contoh: Laptop, Printer, Monitor, dsb"
                                    required
                                    maxlength="255">
+                            {{-- Menampilkan pesan error validasi untuk type --}}
                             @error('type')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @else
@@ -162,7 +174,7 @@
                             @enderror
                         </div>
 
-                        <!-- Room -->
+                        {{-- Dropdown pilihan Ruangan --}}
                         <div class="mb-3">
                             <label for="room_id" class="form-label">
                                 <i class="fas fa-door-open me-1"></i>
@@ -173,19 +185,22 @@
                                     name="room_id" 
                                     required>
                                 <option value="">Pilih ruangan...</option>
+                                {{-- Loop untuk menampilkan daftar ruangan --}}
                                 @foreach($rooms as $room)
                                     <option value="{{ $room->id }}" 
-                                            {{ (old('room_id', $roomId ?? '') == $room->id) ? 'selected' : '' }}>
+                                            {{ (old('room_id', $roomId ?? '') == $room->id) ? 'selected' : '' }}> {{-- Menandai ruangan yang dipilih sebelumnya --}}
                                         {{ $room->name }}
-                                        @if($room->floor) - {{ $room->floor }} @endif
+                                        @if($room->floor) - {{ $room->floor }} @endif {{-- Menampilkan lantai jika ada --}}
                                     </option>
                                 @endforeach
                             </select>
+                            {{-- Menampilkan pesan error validasi untuk room_id --}}
                             @error('room_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @else
                                 <div class="invalid-feedback" id="room_id-error"></div>
                             @enderror
+                            {{-- Pesan peringatan jika belum ada ruangan yang dibuat --}}
                             @if($rooms->count() == 0)
                                 <div class="form-text text-warning">
                                     <i class="fas fa-exclamation-triangle me-1"></i>
@@ -197,7 +212,7 @@
                             @endif
                         </div>
 
-                        <!-- Description -->
+                        {{-- Input untuk Deskripsi Barang --}}
                         <div class="mb-4">
                             <label for="description" class="form-label">
                                 <i class="fas fa-align-left me-1"></i>
@@ -207,7 +222,8 @@
                                       id="description" 
                                       name="description" 
                                       rows="3"
-                                      placeholder="Tambahan informasi tentang barang (kondisi, spesifikasi, dsb)">{{ old('description') }}</textarea>
+                                      placeholder="Tambahan informasi tentang barang (kondisi, spesifikasi, dsb)">{{ old('description') }}</textarea> {{-- Mengisi nilai lama --}}
+                            {{-- Menampilkan pesan error validasi untuk description --}}
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @else
@@ -215,7 +231,7 @@
                             @enderror
                         </div>
 
-                        <!-- Action Buttons -->
+                        {{-- Tombol Aksi (Batal dan Simpan) --}}
                         <div class="d-flex justify-content-between">
                             <a href="{{ route('items.index') }}" class="btn btn-outline-secondary">
                                 <i class="fas fa-times me-1"></i>
@@ -230,7 +246,7 @@
                 </div>
             </div>
             
-            <!-- Help Card -->
+            {{-- Card Tips Pengisian Form --}}
             <div class="card mt-4">
                 <div class="card-header">
                     <h6 class="mb-0">
@@ -240,6 +256,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        {{-- Tips untuk Kode QR --}}
                         <div class="col-md-6">
                             <h6><i class="fas fa-qrcode text-primary me-2"></i>Kode QR</h6>
                             <ul class="list-unstyled small">
@@ -248,6 +265,7 @@
                                 <li>• Contoh: BR001, QR123456, dsb</li>
                             </ul>
                         </div>
+                        {{-- Tips untuk Merk & Tipe Barang --}}
                         <div class="col-md-6">
                             <h6><i class="fas fa-tag text-warning me-2"></i>Merk & Tipe</h6>
                             <ul class="list-unstyled small">
@@ -262,11 +280,11 @@
         </div>
     </div>
 </div>
-@endsection
+@endsection {{-- Mengakhiri bagian konten utama --}}
 
-@push('styles')
+@push('styles') {{-- Memulai bagian CSS inline --}}
 <style>
-    /* QR Scanner Modal Styles */
+    /* Styles untuk container scanner QR */
     .qr-scanner-container {
         display: flex;
         justify-content: center;
@@ -274,6 +292,7 @@
         min-height: 300px;
     }
     
+    /* Styles untuk tampilan reader QR inline */
     #inline-qr-reader {
         border: 2px dashed var(--secondary-orange);
         border-radius: 10px;
@@ -285,13 +304,14 @@
         justify-content: center;
     }
     
+    /* Styles untuk video scanner QR */
     #inline-qr-reader video {
         max-width: 100% !important;
         height: auto !important;
         border-radius: 8px;
     }
     
-    /* Camera controls in modal */
+    /* Styles untuk kontrol kamera di modal */
     #inline-camera-controls {
         animation: fadeIn 0.5s ease-in-out;
     }
@@ -306,7 +326,7 @@
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     
-    /* Modal responsive adjustments */
+    /* Penyesuaian responsif untuk modal */
     @media (max-width: 768px) {
         .modal-lg {
             max-width: 95%;
@@ -323,13 +343,13 @@
         }
     }
     
-    /* Loading animation for modal */
+    /* Animasi loading untuk modal */
     .spinner-border {
         width: 2rem;
         height: 2rem;
     }
     
-    /* Success state animation */
+    /* Animasi status sukses */
     @keyframes bounceIn {
         0% { transform: scale(0); opacity: 0; }
         50% { transform: scale(1.1); opacity: 1; }
@@ -340,7 +360,7 @@
         animation: bounceIn 0.5s ease-in-out;
     }
     
-    /* Input group button styling */
+    /* Styling tombol input group */
     .input-group .btn {
         border-left: 0;
     }
@@ -350,29 +370,31 @@
         box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
     }
     
-    /* QR scan button hover effect */
+    /* Efek hover tombol scan QR */
     #qr-scan-btn:hover {
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     
-    /* Generate button styling */
+    /* Styling tombol generate */
     .btn-outline-secondary.btn-sm {
         font-size: 0.8rem;
         padding: 0.4rem 0.8rem;
     }
     
+    /* Keyframes untuk animasi fadeIn */
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
 </style>
-@endpush
+@endpush {{-- Mengakhiri bagian CSS inline --}}
 
-@push('scripts')
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+@push('scripts') {{-- Memulai bagian JavaScript --}}
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script> {{-- Memuat library HTML5-QRCode --}}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Mendapatkan referensi elemen-elemen form
     const qrCodeInput = document.getElementById('qr_code');
     const brandInput = document.getElementById('brand');
     const typeInput = document.getElementById('type');
@@ -380,25 +402,26 @@ document.addEventListener('DOMContentLoaded', function() {
     const descriptionInput = document.getElementById('description');
     const form = document.querySelector('form');
 
-    // Helper function to show validation error
+    // Fungsi helper untuk menampilkan pesan error validasi
     function showValidationError(inputElement, message) {
-        inputElement.classList.add('is-invalid');
+        inputElement.classList.add('is-invalid'); // Menambah kelas styling error
         const errorElement = document.getElementById(inputElement.id + '-error');
         if (errorElement) {
-            errorElement.textContent = message;
+            errorElement.textContent = message; // Menampilkan pesan error
         }
     }
 
-    // Helper function to clear validation error
+    // Fungsi helper untuk menghapus pesan error validasi
     function clearValidationError(inputElement) {
-        inputElement.classList.remove('is-invalid');
+        inputElement.classList.remove('is-invalid'); // Menghapus kelas styling error
         const errorElement = document.getElementById(inputElement.id + '-error');
         if (errorElement) {
-            errorElement.textContent = '';
+            errorElement.textContent = ''; // Mengosongkan pesan error
         }
     }
 
-    // Add real-time validation listeners
+    // Menambahkan event listener untuk validasi real-time saat input berubah
+    // Validasi untuk Kode QR
     qrCodeInput.addEventListener('input', function() {
         if (qrCodeInput.value.trim() === '') {
             showValidationError(qrCodeInput, 'Kode QR wajib diisi.');
@@ -409,6 +432,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Validasi untuk Merk Barang
     brandInput.addEventListener('input', function() {
         if (brandInput.value.trim() === '') {
             showValidationError(brandInput, 'Merk barang wajib diisi.');
@@ -419,6 +443,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Validasi untuk Tipe Barang
     typeInput.addEventListener('input', function() {
         if (typeInput.value.trim() === '') {
             showValidationError(typeInput, 'Tipe barang wajib diisi.');
@@ -429,6 +454,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Validasi untuk pilihan Ruangan
     roomSelect.addEventListener('change', function() {
         if (roomSelect.value === '') {
             showValidationError(roomSelect, 'Ruangan wajib dipilih.');
@@ -437,33 +463,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Validasi untuk Deskripsi Barang
     descriptionInput.addEventListener('input', function() {
-        // Description is nullable, so only validate if it's filled and exceeds max length
-        if (descriptionInput.value.length > 0 && descriptionInput.value.length > 1000) { // Assuming a max length for description, e.g., 1000 chars
+        // Deskripsi bersifat opsional, validasi hanya jika diisi dan melebihi panjang maksimum
+        if (descriptionInput.value.length > 0 && descriptionInput.value.length > 1000) { // Diasumsikan panjang maksimal 1000 karakter
             showValidationError(descriptionInput, 'Deskripsi tidak boleh lebih dari 1000 karakter.');
         } else {
             clearValidationError(descriptionInput);
         }
     });
 
-    // Auto-generate QR code suggestion only if empty (not from scan)
+    // Logika untuk menampilkan tombol 'Generate Kode Otomatis' atau info QR dari scan
     if (!qrCodeInput.value || qrCodeInput.value.trim() === '') {
+        // Membuat dan menambahkan tombol generate QR otomatis jika input QR kosong
         const generateBtn = document.createElement('button');
         generateBtn.type = 'button';
         generateBtn.className = 'btn btn-outline-secondary btn-sm mt-1 me-2';
         generateBtn.innerHTML = '<i class="fas fa-magic me-1"></i>Generate Kode Otomatis';
         generateBtn.onclick = function() {
-            const randomCode = 'BRG' + Date.now().toString().substr(-6);
+            const randomCode = 'BRG' + Date.now().toString().substr(-6); // Membuat kode QR acak
             qrCodeInput.value = randomCode;
-            generateBtn.style.display = 'none'; // Hide button after generate
+            generateBtn.style.display = 'none'; // Menyembunyikan tombol setelah generate
             
-            // Show success message
+            // Menampilkan pesan sukses
             const successMsg = document.createElement('small');
             successMsg.className = 'text-success d-block mt-1';
             successMsg.innerHTML = '<i class="fas fa-check me-1"></i>Kode QR berhasil digenerate!';
             generateBtn.parentNode.appendChild(successMsg);
             
-            // Focus on next field
+            // Fokus ke field berikutnya (Merk Barang)
             const brandInput = document.getElementById('brand');
             if (brandInput) {
                 brandInput.focus();
@@ -471,30 +499,31 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         qrCodeInput.parentNode.appendChild(generateBtn);
         
-        // Add helper text
+        // Menambahkan teks bantuan
         const helpText = document.createElement('small');
         helpText.className = 'text-muted d-block mt-1';
         helpText.innerHTML = '<i class="fas fa-lightbulb me-1"></i>Tip: Generate kode otomatis atau scan menggunakan kamera';
         qrCodeInput.parentNode.appendChild(helpText);
     } else {
-        // If QR code exists (from scan), add info text
+        // Jika kode QR sudah ada (dari hasil scan), tambahkan teks info
         const infoText = document.createElement('small');
         infoText.className = 'text-success d-block mt-1';
         infoText.innerHTML = '<i class="fas fa-check-circle me-1"></i>Kode QR dari hasil scan. Anda dapat mengubahnya jika diperlukan.';
         qrCodeInput.parentNode.appendChild(infoText);
         
-        // Focus on next field (brand)
+        // Fokus ke field berikutnya (Merk Barang)
         const brandInput = document.getElementById('brand');
         if (brandInput) {
             brandInput.focus();
         }
     }
     
-    // Form submission validation
+    // Validasi form saat disubmit
     form.addEventListener('submit', function(e) {
-        let isValid = true;
+        let isValid = true; // Flag untuk status validasi form
 
-        // Manually trigger validation for all fields on submit
+        // Memicu validasi manual untuk semua field saat submit
+        // Validasi Kode QR
         if (qrCodeInput.value.trim() === '') {
             showValidationError(qrCodeInput, 'Kode QR wajib diisi.');
             isValid = false;
@@ -505,6 +534,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearValidationError(qrCodeInput);
         }
 
+        // Validasi Merk Barang
         if (brandInput.value.trim() === '') {
             showValidationError(brandInput, 'Merk barang wajib diisi.');
             isValid = false;
@@ -515,6 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearValidationError(brandInput);
         }
 
+        // Validasi Tipe Barang
         if (typeInput.value.trim() === '') {
             showValidationError(typeInput, 'Tipe barang wajib diisi.');
             isValid = false;
@@ -525,6 +556,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearValidationError(typeInput);
         }
 
+        // Validasi Pilihan Ruangan
         if (roomSelect.value === '') {
             showValidationError(roomSelect, 'Ruangan wajib dipilih.');
             isValid = false;
@@ -532,6 +564,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearValidationError(roomSelect);
         }
 
+        // Validasi Deskripsi Barang
         if (descriptionInput.value.length > 0 && descriptionInput.value.length > 1000) {
             showValidationError(descriptionInput, 'Deskripsi tidak boleh lebih dari 1000 karakter.');
             isValid = false;
@@ -539,9 +572,10 @@ document.addEventListener('DOMContentLoaded', function() {
             clearValidationError(descriptionInput);
         }
 
+        // Jika ada input yang tidak valid, cegah pengiriman form dan scroll ke field pertama yang invalid
         if (!isValid) {
-            e.preventDefault();
-            // Scroll to the first invalid field
+            e.preventDefault(); // Mencegah pengiriman form
+            // Scroll ke field yang pertama kali tidak valid
             const firstInvalid = document.querySelector('.is-invalid');
             if (firstInvalid) {
                 firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -550,12 +584,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// QR Scanner Integration
+// Variabel global untuk scanner QR inline dan status scanning
 let inlineQrScanner = null;
 let isInlineScanning = false;
 
+// Fungsi untuk membuka modal scanner QR
 function openQRScanner() {
-    // Create modal for QR scanner
+    // HTML untuk modal scanner QR
     const modalHtml = `
         <div class="modal fade" id="qrScanModal" tabindex="-1" aria-labelledby="qrScanModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -574,12 +609,12 @@ function openQRScanner() {
                             </div>
                         </div>
                         
-                        <!-- Scanner Container -->
+                        {{-- Container untuk tampilan scanner QR --}}
                         <div class="qr-scanner-container">
                             <div id="inline-qr-reader" style="width: 100%; max-width: 500px; margin: 0 auto;"></div>
                         </div>
                         
-                        <!-- Camera Controls -->
+                        {{-- Kontrol kamera (tombol switch dan flash) --}}
                         <div class="text-center mt-3" id="inline-camera-controls" style="display: none;">
                             <div class="btn-group" role="group">
                                 <button type="button" 
@@ -599,7 +634,7 @@ function openQRScanner() {
                             </div>
                         </div>
                         
-                        <!-- Manual Input -->
+                        {{-- Input manual kode QR --}}
                         <div class="mt-4 pt-3 border-top">
                             <h6><i class="fas fa-keyboard me-2"></i>Atau Input Manual</h6>
                             <div class="input-group">
@@ -625,39 +660,39 @@ function openQRScanner() {
         </div>
     `;
     
-    // Remove existing modal if any
+    // Menghapus modal yang sudah ada jika ada untuk mencegah duplikasi
     const existingModal = document.getElementById('qrScanModal');
     if (existingModal) {
         existingModal.remove();
     }
     
-    // Add modal to page
+    // Menambahkan HTML modal ke body dokumen
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     
-    // Show modal
+    // Menampilkan modal Bootstrap
     const modal = new bootstrap.Modal(document.getElementById('qrScanModal'));
     modal.show();
     
-    // Start scanner when modal is shown
+    // Memulai scanner ketika modal ditampilkan sepenuhnya
     document.getElementById('qrScanModal').addEventListener('shown.bs.modal', function() {
         startInlineScanner();
     });
     
-    // Stop scanner when modal is hidden
+    // Menghentikan scanner dan menghapus modal ketika modal disembunyikan
     document.getElementById('qrScanModal').addEventListener('hidden.bs.modal', function() {
         stopInlineScanner();
-        // Remove modal from DOM
-        document.getElementById('qrScanModal').remove();
+        document.getElementById('qrScanModal').remove(); // Menghapus modal dari DOM
     });
 }
 
+// Fungsi untuk memulai scanner QR inline
 function startInlineScanner() {
-    if (isInlineScanning) return;
+    if (isInlineScanning) return; // Jika sudah scanning, jangan memulai lagi
     
     const qrReaderElement = document.getElementById('inline-qr-reader');
-    if (!qrReaderElement) return;
+    if (!qrReaderElement) return; // Jika elemen tidak ditemukan, keluar
     
-    // Show loading
+    // Menampilkan indikator loading saat mengakses kamera
     qrReaderElement.innerHTML = `
         <div class="text-center py-4">
             <div class="spinner-border text-primary" role="status">
@@ -667,20 +702,21 @@ function startInlineScanner() {
         </div>
     `;
     
-    inlineQrScanner = new Html5Qrcode("inline-qr-reader");
+    inlineQrScanner = new Html5Qrcode("inline-qr-reader"); // Inisialisasi Html5Qrcode
     
+    // Konfigurasi scanner
     const config = {
-        fps: 10,
-        qrbox: { width: 300, height: 300 },
-        aspectRatio: 1.0
+        fps: 10, // Frames per second
+        qrbox: { width: 300, height: 300 }, // Ukuran kotak QR untuk deteksi
+        aspectRatio: 1.0 // Rasio aspek kamera
     };
     
-    // Try to start scanner
+    // Mencoba memulai scanner
     Html5Qrcode.getCameras().then(devices => {
         if (devices && devices.length) {
-            let cameraId = devices[0].id;
+            let cameraId = devices[0].id; // Default menggunakan kamera pertama
             
-            // Look for back camera
+            // Mencari kamera belakang/lingkungan
             const backCamera = devices.find(device => 
                 device.label.toLowerCase().includes('back') || 
                 device.label.toLowerCase().includes('environment') ||
@@ -688,72 +724,71 @@ function startInlineScanner() {
             );
             
             if (backCamera) {
-                cameraId = backCamera.id;
+                cameraId = backCamera.id; // Jika ditemukan, gunakan kamera belakang
             }
             
             inlineQrScanner.start(
-                cameraId,
-                config,
-                (decodedText, decodedResult) => {
+                cameraId, // ID kamera yang akan digunakan
+                config, // Konfigurasi scanner
+                (decodedText, decodedResult) => { // Callback sukses scan
                     console.log('Inline QR scan success:', decodedText);
                     onInlineScanSuccess(decodedText);
                 },
-                (errorMessage) => {
-                    // Silent error handling
+                (errorMessage) => { // Callback error (dibuat silent)
+                    // Penanganan error secara silent, tidak menampilkan pesan ke pengguna
                 }
             ).then(() => {
-                isInlineScanning = true;
+                isInlineScanning = true; // Mengatur status scanning menjadi true
                 console.log('Inline QR Scanner started');
                 
-                // Show controls
+                // Menampilkan kontrol kamera setelah scanner dimulai
                 setTimeout(() => {
                     const controls = document.getElementById('inline-camera-controls');
                     if (controls) {
                         controls.style.display = 'block';
                     }
-                }, 1500);
+                }, 1500); // Tunda sebentar agar transisi lebih halus
                 
             }).catch(err => {
-                console.error('Error starting inline scanner:', err);
-                showInlineError('Gagal mengakses kamera: ' + err.message);
+                console.error('Error starting inline scanner:', err); // Log error
+                showInlineError('Gagal mengakses kamera: ' + err.message); // Tampilkan pesan error ke pengguna
             });
             
         } else {
-            showInlineError('Tidak ada kamera yang tersedia');
+            showInlineError('Tidak ada kamera yang tersedia'); // Jika tidak ada kamera ditemukan
         }
     }).catch(err => {
-        console.error('Error getting cameras for inline scanner:', err);
-        showInlineError('Error mengakses daftar kamera');
+        console.error('Error getting cameras for inline scanner:', err); // Log error
+        showInlineError('Error mengakses daftar kamera'); // Tampilkan pesan error ke pengguna
     });
 }
 
+// Fungsi untuk menghentikan scanner QR inline
 function stopInlineScanner() {
-    if (inlineQrScanner && isInlineScanning) {
+    if (inlineQrScanner && isInlineScanning) { // Hanya jika scanner aktif
         inlineQrScanner.stop().then(() => {
             console.log('Inline scanner stopped');
         }).catch(err => {
             console.error('Error stopping inline scanner:', err);
         });
         
-        isInlineScanning = false;
-        inlineQrScanner = null;
+        isInlineScanning = false; // Mengatur status scanning menjadi false
+        inlineQrScanner = null; // Menghapus objek scanner
     }
 }
 
+// Fungsi yang dipanggil ketika scan QR berhasil
 function onInlineScanSuccess(decodedText) {
-    // Stop scanning
-    stopInlineScanner();
+    stopInlineScanner(); // Menghentikan scanning setelah berhasil
     
-    // Update the main QR input
+    // Mengisi input QR utama dengan hasil scan
     const qrInput = document.getElementById('qr_code');
     if (qrInput) {
         qrInput.value = decodedText;
-        
-        // Trigger input event for any validation
-        qrInput.dispatchEvent(new Event('input', { bubbles: true }));
+        qrInput.dispatchEvent(new Event('input', { bubbles: true })); // Memicu event input untuk validasi real-time
     }
     
-    // Show success in modal
+    // Menampilkan pesan sukses di modal scanner
     const qrReaderElement = document.getElementById('inline-qr-reader');
     if (qrReaderElement) {
         qrReaderElement.innerHTML = `
@@ -766,21 +801,22 @@ function onInlineScanSuccess(decodedText) {
         `;
     }
     
-    // Hide controls
+    // Menyembunyikan kontrol kamera
     const controls = document.getElementById('inline-camera-controls');
     if (controls) {
         controls.style.display = 'none';
     }
     
-    // Auto close modal after short delay
+    // Menutup modal secara otomatis setelah beberapa saat
     setTimeout(() => {
         const modal = bootstrap.Modal.getInstance(document.getElementById('qrScanModal'));
         if (modal) {
             modal.hide();
         }
-    }, 2000);
+    }, 2000); // Tutup setelah 2 detik
 }
 
+// Fungsi untuk menampilkan pesan error di dalam scanner inline
 function showInlineError(message) {
     const qrReaderElement = document.getElementById('inline-qr-reader');
     if (qrReaderElement) {
@@ -796,49 +832,51 @@ function showInlineError(message) {
         `;
     }
     
-    // Hide controls
+    // Menyembunyikan kontrol kamera jika ada error
     const controls = document.getElementById('inline-camera-controls');
     if (controls) {
         controls.style.display = 'none';
     }
 }
 
-// Camera control functions for inline scanner
+// Fungsi kontrol kamera untuk scanner inline
 function switchInlineCamera() {
-    // This would require more complex implementation
-    // For now, just restart the scanner
+    // Implementasi ini akan lebih kompleks untuk mengganti kamera sebenarnya
+    // Untuk saat ini, fungsi ini hanya akan me-restart scanner
     if (inlineQrScanner && isInlineScanning) {
         stopInlineScanner();
         setTimeout(() => {
             startInlineScanner();
-        }, 1000);
+        }, 1000); // Tunda sebentar sebelum restart
     }
 }
 
+// Fungsi untuk mengaktifkan/menonaktifkan flash (belum diimplementasikan penuh)
 function toggleInlineFlash() {
-    // Implementation similar to main scanner
-    console.log('Flash toggle for inline scanner - to be implemented');
+    console.log('Flash toggle for inline scanner - to be implemented'); // Pesan log bahwa fitur belum diimplementasikan
 }
 
+// Fungsi untuk menggunakan input QR manual dari modal
 function useManualQR() {
     const manualInput = document.getElementById('manual-qr-input');
     const qrInput = document.getElementById('qr_code');
     
+    // Jika input manual dan input QR utama ditemukan, serta input manual tidak kosong
     if (manualInput && qrInput && manualInput.value.trim()) {
-        qrInput.value = manualInput.value.trim();
-        qrInput.dispatchEvent(new Event('input', { bubbles: true }));
+        qrInput.value = manualInput.value.trim(); // Mengisi input QR utama dengan nilai manual
+        qrInput.dispatchEvent(new Event('input', { bubbles: true })); // Memicu event input untuk validasi real-time
         
-        // Close modal
+        // Menutup modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('qrScanModal'));
         if (modal) {
             modal.hide();
         }
     } else {
-        alert('Silakan masukkan kode QR terlebih dahulu!');
+        alert('Silakan masukkan kode QR terlebih dahulu!'); // Pesan peringatan jika input manual kosong
         if (manualInput) {
-            manualInput.focus();
+            manualInput.focus(); // Fokus kembali ke input manual
         }
     }
 }
 </script>
-@endpush
+@endpush {{-- Mengakhiri bagian JavaScript --}}

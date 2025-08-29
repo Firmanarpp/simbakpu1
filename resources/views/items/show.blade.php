@@ -19,25 +19,27 @@
  * @since August 2025
  */
 --}}
-@extends('layouts.app')
+@extends('layouts.app') {{-- Menggunakan layout aplikasi utama --}}
 
-@section('title', 'Detail Barang - ' . $item->brand . ' ' . $item->type)
+@section('title', 'Detail Barang - ' . $item->brand . ' ' . $item->type) {{-- Mengatur judul halaman dengan detail barang --}}
 
-@section('content')
-{{-- Page Header --}}
+@section('content') {{-- Memulai bagian konten utama --}}
+{{-- Bagian Header Halaman --}}
 <div class="page-header">
     <div class="container">
         <div class="row align-items-center">
             <div class="col">
+                {{-- Judul halaman untuk tampilan desktop dan mobile --}}
                 <h1 class="mb-0">
                     <i class="fas fa-box me-2 d-none d-md-inline"></i>
                     <span class="d-md-none">📦</span>
                     Detail Barang
                 </h1>
-                <!-- Desktop subtitle only -->
+                {{-- Subjudul untuk desktop: Menampilkan merk dan tipe barang --}}
                 <p class="lead mb-0 d-none d-md-block">{{ $item->brand }} - {{ $item->type }}</p>
             </div>
             <div class="col-auto">
+                {{-- Grup tombol navigasi (Kembali dan Edit) --}}
                 <div class="btn-group" role="group">
                     <a href="{{ route('items.index') }}" class="btn btn-light btn-sm">
                         <i class="fas fa-arrow-left me-1 d-none d-md-inline"></i>
@@ -57,9 +59,10 @@
 
 <div class="container mt-3">
     <div class="row g-3">
-        <!-- Main Content Card - Mobile First -->
+        {{-- Kolom utama konten detail barang --}}
         <div class="col-12 col-lg-8 order-1">
             <div class="card">
+                {{-- Header card informasi barang --}}
                 <div class="card-header bg-gradient-orange text-white">
                     <h5 class="mb-0">
                         <i class="fas fa-info-circle me-2"></i>
@@ -67,8 +70,9 @@
                     </h5>
                 </div>
                 <div class="card-body">
-                    <!-- Mobile-optimized info display -->
+                    {{-- Tampilan informasi yang dioptimalkan untuk mobile --}}
                     <div class="row g-3">
+                        {{-- Bagian Kode QR --}}
                         <div class="col-12 col-md-6">
                             <div class="info-item border-bottom pb-2 mb-2">
                                 <div class="d-flex justify-content-between align-items-start">
@@ -78,6 +82,7 @@
                                         </label>
                                         <div class="d-flex align-items-center gap-2">
                                             <code class="bg-light p-2 rounded flex-grow-1 small text-break">{{ $item->qr_code }}</code>
+                                            {{-- Tombol untuk menyalin kode QR ke clipboard --}}
                                             <button class="btn btn-outline-secondary btn-sm" onclick="copyToClipboard('{{ $item->qr_code }}')" title="Salin kode">
                                                 <i class="fas fa-copy"></i>
                                             </button>
@@ -87,6 +92,7 @@
                             </div>
                         </div>
                         
+                        {{-- Bagian Merk Barang --}}
                         <div class="col-12 col-md-6">
                             <div class="info-item border-bottom pb-2 mb-2">
                                 <label class="form-label fw-bold text-muted small mb-1">
@@ -96,6 +102,7 @@
                             </div>
                         </div>
                         
+                        {{-- Bagian Tipe Barang --}}
                         <div class="col-12 col-md-6">
                             <div class="info-item border-bottom pb-2 mb-2">
                                 <label class="form-label fw-bold text-muted small mb-1">
@@ -105,6 +112,7 @@
                             </div>
                         </div>
                         
+                        {{-- Bagian Ruangan --}}
                         <div class="col-12 col-md-6">
                             <div class="info-item border-bottom pb-2 mb-2">
                                 <label class="form-label fw-bold text-muted small mb-1">
@@ -112,6 +120,7 @@
                                 </label>
                                 <div>
                                     @if($item->room)
+                                        {{-- Link ke detail ruangan --}}
                                         <a href="{{ route('rooms.show', $item->room->id) }}" class="text-decoration-none">
                                             <span class="badge bg-info fs-6 p-2">
                                                 {{ $item->room->name }}
@@ -125,7 +134,7 @@
                         </div>
                     </div>
 
-                    <!-- Description Section -->
+                    {{-- Bagian Deskripsi --}}
                     @if($item->description)
                     <div class="row mt-3">
                         <div class="col-12">
@@ -141,17 +150,19 @@
                     </div>
                     @endif
 
-                    <!-- Timestamps Section -->
+                    {{-- Bagian Timestamp (Dibuat dan Diubah) --}}
                     <div class="row mt-3">
                         <div class="col-12">
                             <hr>
                             <div class="row g-2">
+                                {{-- Waktu pembuatan barang --}}
                                 <div class="col-12 col-sm-6">
                                     <small class="text-muted d-block">
                                         <i class="fas fa-calendar-plus me-1"></i>
                                         <strong>Dibuat:</strong> {{ $item->created_at->format('d M Y, H:i') }}
                                     </small>
                                 </div>
+                                {{-- Waktu terakhir update barang --}}
                                 <div class="col-12 col-sm-6">
                                     <small class="text-muted d-block">
                                         <i class="fas fa-calendar-edit me-1"></i>
@@ -165,9 +176,9 @@
             </div>
         </div>
 
-        <!-- Action Sidebar - Mobile Responsive -->
+        {{-- Kolom sidebar untuk aksi (QR Code dan Tombol Aksi) --}}
         <div class="col-12 col-lg-4 order-2">
-            <!-- QR Code Card -->
+            {{-- Card QR Code --}}
             <div class="card mb-3">
                 <div class="card-header bg-gradient-red text-white">
                     <h6 class="mb-0">
@@ -176,9 +187,11 @@
                     </h6>
                 </div>
                 <div class="card-body text-center p-3">
+                    {{-- Container untuk canvas QR Code --}}
                     <div class="qr-container mb-3">
                         <canvas id="qrcode" class="d-inline-block mx-auto"></canvas>
                     </div>
+                    {{-- Tombol Download QR Code --}}
                     <div class="d-grid gap-2">
                         <button class="btn btn-primary btn-sm" onclick="downloadQR()">
                             <i class="fas fa-download me-1"></i>
@@ -189,7 +202,7 @@
                 </div>
             </div>
 
-            <!-- Actions Card -->
+            {{-- Card Aksi --}}
             <div class="card">
                 <div class="card-header bg-gradient-orange text-white">
                     <h6 class="mb-0">
@@ -199,21 +212,25 @@
                 </div>
                 <div class="card-body p-3">
                     <div class="d-grid gap-2">
+                        {{-- Tombol Edit Barang --}}
                         <a href="{{ route('items.edit', $item->id) }}" class="btn btn-warning">
                             <i class="fas fa-edit me-2"></i>
                             <span class="d-none d-sm-inline">Edit Barang</span>
                             <span class="d-sm-none">Edit</span>
                         </a>
+                        {{-- Tombol Hapus Barang (memicu modal konfirmasi) --}}
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
                             <i class="fas fa-trash me-2"></i>
                             <span class="d-none d-sm-inline">Hapus Barang</span>
                             <span class="d-sm-none">Hapus</span>
                         </button>
+                        {{-- Tombol untuk melihat daftar barang --}}
                         <a href="{{ route('items.index') }}" class="btn btn-secondary">
                             <i class="fas fa-list me-2"></i>
                             <span class="d-none d-sm-inline">Daftar Barang</span>
                             <span class="d-sm-none">Daftar</span>
                         </a>
+                        {{-- Tombol untuk melihat detail ruangan jika barang terkait dengan ruangan --}}
                         @if($item->room)
                         <a href="{{ route('rooms.show', $item->room->id) }}" class="btn btn-info">
                             <i class="fas fa-door-open me-2"></i>
@@ -228,7 +245,7 @@
     </div>
 </div>
 
-<!-- Delete Modal -->
+{{-- Modal Konfirmasi Hapus --}}
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -237,11 +254,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                {{-- Peringatan bahwa tindakan tidak dapat dibatalkan --}}
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle me-2"></i>
                     <strong>Peringatan!</strong> Tindakan ini tidak dapat dibatalkan.
                 </div>
                 <p>Apakah Anda yakin ingin menghapus barang berikut?</p>
+                {{-- Detail barang yang akan dihapus --}}
                 <div class="bg-light p-3 rounded">
                     <strong>{{ $item->brand }}</strong> - {{ $item->type }}
                     <br>
@@ -249,12 +268,14 @@
                 </div>
             </div>
             <div class="modal-footer">
+                {{-- Tombol Batal --}}
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fas fa-times me-1"></i>Batal
                 </button>
+                {{-- Form untuk mengirim permintaan DELETE --}}
                 <form action="{{ route('items.destroy', $item->id) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
+                    @csrf {{-- Token CSRF untuk keamanan form --}}
+                    @method('DELETE') {{-- Metode DELETE untuk menghapus resource --}}
                     <button type="submit" class="btn btn-danger">
                         <i class="fas fa-trash me-1"></i>Ya, Hapus Barang
                     </button>
@@ -263,68 +284,78 @@
         </div>
     </div>
 </div>
-@endsection
+@endsection {{-- Mengakhiri bagian konten utama --}}
 
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+@push('scripts') {{-- Memulai bagian JavaScript --}}
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script> {{-- Memuat library QRCode.js --}}
 <script>
-let qrCodeCanvasElement = null; // Global variable to store the QR code canvas
+let qrCodeCanvasElement = null; // Variabel global untuk menyimpan elemen canvas QR code yang digenerate
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Generate QR Code
+    // Menginisialisasi Tooltips Bootstrap
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // Menggenerate QR Code saat DOM dimuat
     const qrCodeContainer = document.getElementById('qrcode');
     
     if (qrCodeContainer) {
-        QRCode.toCanvas(qrCodeContainer, '{{ $item->qr_code }}', {
+        QRCode.toCanvas(qrCodeContainer, '{{ $item->qr_code }}', { // Menggenerate QR code ke dalam elemen canvas
             width: 150,
             height: 150,
             margin: 1,
             color: {
-                dark: '#dc3545',
-                light: '#ffffff'
+                dark: '#dc3545', // Warna gelap QR code (merah)
+                light: '#ffffff' // Warna terang QR code (putih)
             }
-        }, function (error, canvas) { // Add 'canvas' parameter to the callback
+        }, function (error, canvas) { // Callback setelah QR code digenerate
             if (error) {
                 console.error(error);
+                // Menampilkan pesan error jika gagal generate QR
                 qrCodeContainer.innerHTML = '<div class="text-muted"><i class="fas fa-exclamation-triangle"></i><br>Gagal generate QR</div>';
             } else {
-                qrCodeCanvasElement = canvas; // Store the generated canvas
+                qrCodeCanvasElement = canvas; // Menyimpan elemen canvas yang digenerate
             }
         });
     }
 });
 
+// Fungsi untuk mengunduh QR Code sebagai gambar PNG
 function downloadQR() {
     if (!qrCodeCanvasElement) {
-        showToast('QR Code tidak ditemukan untuk diunduh.', 'error');
+        showToast('QR Code tidak ditemukan untuk diunduh.', 'error'); // Menampilkan pesan toast jika QR tidak ada
         return;
     }
 
-    const link = document.createElement('a');
-    link.download = 'qr-{{ $item->qr_code }}.png';
-    link.href = qrCodeCanvasElement.toDataURL('image/png');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    showToast('QR Code berhasil diunduh!', 'success');
+    const link = document.createElement('a'); // Membuat elemen tautan
+    link.download = 'qr-{{ $item->qr_code }}.png'; // Nama file unduhan
+    link.href = qrCodeCanvasElement.toDataURL('image/png'); // Mengatur href ke data URL gambar PNG
+    document.body.appendChild(link); // Menambahkan tautan ke body dokumen
+    link.click(); // Memicu klik untuk mengunduh
+    document.body.removeChild(link); // Menghapus tautan dari body
+    showToast('QR Code berhasil diunduh!', 'success'); // Menampilkan pesan sukses
 }
 
+// Fungsi untuk menyalin teks ke clipboard
 function copyToClipboard(text) {
+    // Menggunakan Clipboard API modern jika tersedia
     if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(function() {
-            showToast('QR Code berhasil disalin!', 'success');
+            showToast('QR Code berhasil disalin!', 'success'); // Menampilkan pesan sukses
         }).catch(function() {
-            // Fallback for older browsers
+            // Fallback untuk browser lama jika Clipboard API gagal
             const textArea = document.createElement('textarea');
             textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
-            document.execCommand('copy');
+            document.execCommand('copy'); // Eksekusi perintah copy
             document.body.removeChild(textArea);
-            showToast('QR Code disalin ke clipboard!', 'info');
+            showToast('QR Code disalin ke clipboard! (via fallback)', 'info');
         });
     } else {
-        // Fallback if clipboard API is not available at all
+        // Fallback jika Clipboard API sama sekali tidak tersedia
         const textArea = document.createElement('textarea');
         textArea.value = text;
         document.body.appendChild(textArea);
@@ -335,4 +366,4 @@ function copyToClipboard(text) {
     }
 }
 </script>
-@endpush
+@endpush {{-- Mengakhiri bagian JavaScript --}}

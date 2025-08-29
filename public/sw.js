@@ -60,11 +60,16 @@ self.addEventListener('fetch', function(event) {
   }
   
   event.respondWith(
-    caches.match(event.request)
+    caches.match(event.request, { ignoreSearch: true, ignoreVary: true })
       .then(function(response) {
         // Return cached version or fetch from network
         if (response) {
           console.log('Serving from cache:', event.request.url);
+          // If the cached response is a redirect, we should fetch from network to follow it
+          if (response.redirected) {
+            console.log('Cached response is a redirect, fetching from network:', event.request.url);
+            return fetch(event.request);
+          }
           return response;
         }
         

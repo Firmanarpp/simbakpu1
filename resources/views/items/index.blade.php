@@ -19,24 +19,27 @@
  * @since August 2025
  */
 --}}
-@extends('layouts.app')
+@extends('layouts.app') {{-- Menggunakan layout aplikasi utama --}}
 
-@section('title', 'Daftar Barang - Sistem Manajemen Barang Kantor')
+@section('title', 'Daftar Barang - Sistem Manajemen Barang Kantor') {{-- Mengatur judul halaman --}}
 
-@section('content')
-{{-- Page Header --}}
+@section('content') {{-- Memulai bagian konten utama --}}
+{{-- Bagian Header Halaman --}}
 <div class="page-header">
     <div class="container">
         <div class="row align-items-center">
             <div class="col">
+                {{-- Judul halaman untuk tampilan desktop dan mobile --}}
                 <h1 class="mb-0">
                     <i class="fas fa-box me-2 d-none d-md-inline"></i>
                     <span class="d-md-none">📦</span>
                     Daftar Barang
                 </h1>
+                {{-- Deskripsi halaman untuk tampilan desktop dan mobile --}}
                 <p class="lead mb-0 d-none d-md-block">Kelola semua barang yang ada di gedung kantor</p>
                 <p class="mb-0 d-md-none"><small>Kelola barang kantor</small></p>
             </div>
+            {{-- Tombol Tambah Barang --}}
             <div class="col-auto">
                 <a href="{{ route('items.create') }}" class="btn btn-light btn-sm">
                     <i class="fas fa-plus me-1 d-none d-sm-inline"></i>
@@ -51,16 +54,19 @@
 
 <div class="container mt-3">
     <div class="card">
+        {{-- Header card dengan total barang dan tombol aksi cepat --}}
         <div class="card-header bg-gradient-orange text-white">
             <div class="row align-items-center">
                 <div class="col">
                     <h5 class="mb-0">
                         <i class="fas fa-list me-2"></i>
+                        {{-- Menampilkan total jumlah barang --}}
                         <span class="d-none d-md-inline">Total {{ $items->total() }} Barang</span>
                         <span class="d-md-none">{{ $items->total() }} Items</span>
                     </h5>
                 </div>
                 <div class="col-auto">
+                    {{-- Grup tombol aksi cepat (Tambah Barang dan Scan QR) --}}
                     <div class="btn-group" role="group">
                         <a href="{{ route('items.create') }}" class="btn btn-white btn-sm shadow-sm border">
                             <i class="fas fa-plus me-1 d-none d-sm-inline text-primary"></i>
@@ -77,9 +83,10 @@
             </div>
         </div>
 
-        {{-- Search and Filter Form --}}
+        {{-- Form Pencarian dan Filter --}}
         <div class="card-body bg-light border-bottom p-3">
             <form action="{{ route('items.index') }}" method="GET" class="row g-3 align-items-center">
+                {{-- Input pencarian berdasarkan merk, tipe, atau QR Code --}}
                 <div class="col-12 col-md-6 col-lg-4">
                     <label for="search" class="visually-hidden">Cari Barang</label>
                     <div class="input-group input-group-sm">
@@ -87,10 +94,12 @@
                         <input type="text" name="search" id="search" class="form-control border-start-0" placeholder="Cari merk, tipe, atau QR Code..." value="{{ request('search') }}">
                     </div>
                 </div>
+                {{-- Dropdown filter berdasarkan Ruangan --}}
                 <div class="col-12 col-md-6 col-lg-4">
                     <label for="room_id" class="visually-hidden">Filter Ruangan</label>
                     <select name="room_id" id="room_id" class="form-select form-select-sm">
                         <option value="">Semua Ruangan</option>
+                        {{-- Loop untuk menampilkan opsi ruangan --}}
                         @foreach($rooms as $room)
                             <option value="{{ $room->id }}" {{ request('room_id') == $room->id ? 'selected' : '' }}>
                                 {{ $room->name }} ({{ $room->floor }})
@@ -98,6 +107,7 @@
                         @endforeach
                     </select>
                 </div>
+                {{-- Tombol Filter dan Reset --}}
                 <div class="col-12 col-lg-4 text-end">
                     <button type="submit" class="btn btn-primary btn-sm me-2">
                         <i class="fas fa-filter me-1"></i> Filter
@@ -110,13 +120,14 @@
         </div>
 
         <div class="card-body p-0">
-            @if($items->count() > 0)
-                <!-- Mobile Card View -->
+            @if($items->count() > 0) {{-- Memeriksa apakah ada barang untuk ditampilkan --}}
+                {{-- Tampilan Card untuk Mobile (layar kecil) --}}
                 <div class="d-block d-lg-none">
                     @foreach($items as $item)
                     <div class="border-bottom p-3">
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <h6 class="mb-0 fw-bold text-primary">{{ $item->brand }}</h6>
+                            {{-- Dropdown untuk aksi (Lihat, Edit) --}}
                             <div class="dropdown">
                                 <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown">
                                     <i class="fas fa-ellipsis-v"></i>
@@ -129,14 +140,12 @@
                                         <i class="fas fa-edit me-2"></i>Edit
                                     </a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="#" onclick="deleteItem({{ $item->id }})">
-                                        <i class="fas fa-trash me-2"></i>Hapus
-                                    </a></li>
                                 </ul>
                             </div>
                         </div>
                         <div>
                             <p class="mb-1 text-muted small">{{ $item->type }}</p>
+                            {{-- Badge untuk ruangan, kondisi, dan status --}}
                             <div class="d-flex gap-2 mb-2">
                                 <span class="badge bg-info small">{{ $item->room->name ?? 'No Room' }}</span>
                                 <span class="badge bg-secondary small">{{ $item->condition }}</span>
@@ -148,11 +157,11 @@
                     @endforeach
                 </div>
 
-                <!-- Desktop Table View -->
+                {{-- Tampilan Tabel untuk Desktop (layar besar) --}}
                 <div class="d-none d-lg-block">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
-                        <thead class="table-dark">
+                        <thead class="table-dark"> {{-- Header tabel --}}
                             <tr>
                                 <th width="5%">No</th>
                                 <th width="15%">QR Code</th>
@@ -164,9 +173,10 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{-- Loop untuk menampilkan setiap barang dalam tabel --}}
                             @foreach($items as $index => $item)
                                 <tr>
-                                    <td>{{ $items->firstItem() + $index }}</td>
+                                    <td>{{ $items->firstItem() + $index }}</td> {{-- Nomor urut barang --}}
                                     <td>
                                         <code class="bg-light p-1 rounded small">{{ $item->qr_code }}</code>
                                     </td>
@@ -175,16 +185,19 @@
                                     </td>
                                     <td>{{ $item->type }}</td>
                                     <td>
+                                        {{-- Badge untuk nama ruangan --}}
                                         <span class="badge bg-info">
                                             <i class="fas fa-door-open me-1"></i>
                                             {{ $item->room->name ?? 'No Room' }}
                                         </span>
+                                        {{-- Menampilkan lantai ruangan jika ada --}}
                                         @if($item->room && $item->room->floor)
                                             <br>
                                             <small class="text-muted">{{ $item->room->floor }}</small>
                                         @endif
                                     </td>
                                     <td>
+                                        {{-- Menampilkan deskripsi barang (dibatasi 50 karakter) --}}
                                         @if($item->description)
                                             <span class="text-muted small">{{ Str::limit($item->description, 50) }}</span>
                                         @else
@@ -192,6 +205,7 @@
                                         @endif
                                     </td>
                                     <td>
+                                        {{-- Grup tombol aksi (Lihat dan Edit) --}}
                                         <div class="btn-group" role="group" aria-label="Actions">
                                             <a href="{{ route('items.show', $item->id) }}" 
                                                class="btn btn-outline-primary btn-sm"
@@ -207,14 +221,6 @@
                                                 <i class="fas fa-edit"></i>
                                                 <span class="d-none d-xl-inline ms-1">Edit</span>
                                             </a>
-                                            <button type="button" 
-                                                    class="btn btn-outline-danger btn-sm"
-                                                    onclick="deleteItem({{ $item->id }})"
-                                                    title="Hapus Barang"
-                                                    data-bs-toggle="tooltip">
-                                                <i class="fas fa-trash"></i>
-                                                <span class="d-none d-xl-inline ms-1">Hapus</span>
-                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -223,7 +229,8 @@
                         </table>
                     </div>
                 </div>
-            @else
+            @else {{-- Jika tidak ada barang ditemukan --}}
+                {{-- Pesan kosong dan tombol untuk menambahkan barang --}}
                 <div class="text-center py-5">
                     <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
                     <h5 class="text-muted">Belum ada barang yang ditambahkan</h5>
@@ -239,60 +246,34 @@
                 </div>
             @endif
             
-            @if($items->count() > 0)
-                <!-- Pagination -->
+            @if($items->count() > 0) {{-- Menampilkan paginasi jika ada barang --}}
+                {{-- Bagian Paginasi --}}
                 <div class="d-flex justify-content-center mt-3 px-3 pb-3">
-                    {{ $items->links('pagination.custom') }}
+                    {{ $items->links('pagination.custom') }} {{-- Menggunakan custom pagination view --}}
                 </div>
             @endif
         </div>
     </div>
 </div>
+@endsection {{-- Mengakhiri bagian konten utama --}}
 
-<!-- Delete Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Konfirmasi Hapus</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Apakah Anda yakin ingin menghapus barang ini?</p>
-                <div id="deleteItemInfo" class="alert alert-warning"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <form id="deleteForm" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">
-                        <i class="fas fa-trash me-1"></i>Hapus
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
-
-@section('scripts')
+@section('scripts') {{-- Memulai bagian JavaScript --}}
 <script>
-// Initialize tooltips
+// Event listener untuk memastikan DOM sudah dimuat sepenuhnya
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Bootstrap tooltips
+    // Inisialisasi Bootstrap tooltips
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
     
-    // Check if FontAwesome is loaded
+    // Fungsi untuk memeriksa apakah FontAwesome dimuat dengan benar
     const checkFontAwesome = () => {
         const icons = document.querySelectorAll('.fas, .far, .fab');
         icons.forEach(icon => {
+            // Jika FontAwesome tidak dimuat, berikan fallback teks untuk ikon tertentu
             if (getComputedStyle(icon).fontFamily.indexOf('Font Awesome') === -1) {
                 console.warn('FontAwesome may not be loaded properly');
-                // Fallback for specific icons
                 if (icon.classList.contains('fa-chevron-left')) {
                     icon.innerHTML = '‹';
                 } else if (icon.classList.contains('fa-chevron-right')) {
@@ -302,17 +283,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
     
-    // Check FontAwesome after DOM is loaded
+    // Panggil fungsi pemeriksaan FontAwesome setelah DOM dimuat dan sedikit penundaan
     setTimeout(checkFontAwesome, 100);
 });
-
-function deleteItem(itemId) {
-    // Set form action
-    document.getElementById('deleteForm').action = `/items/${itemId}`;
-    
-    // Show modal
-    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
-    modal.show();
-}
 </script>
-@endsection
+@endsection {{-- Mengakhiri bagian JavaScript --}}

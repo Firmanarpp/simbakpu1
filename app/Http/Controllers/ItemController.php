@@ -51,14 +51,14 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        Item::create($request->validate([
+        $item = Item::create($request->validate([
             'brand' => 'required|string|max:255',
             'qr_code' => 'required|string|unique:items,qr_code',
             'type' => 'required|string|max:255',
             'room_id' => 'required|exists:rooms,id',
             'description' => 'nullable|string'
         ]));
-        return redirect()->route('items.index')->with('success', 'Barang berhasil ditambahkan!');
+        return redirect()->route('items.show', $item->id)->with('success', 'Barang berhasil ditambahkan!');
     }
 
     /**
@@ -90,7 +90,7 @@ class ItemController extends Controller
             'room_id' => 'required|exists:rooms,id',
             'description' => 'nullable|string'
         ]));
-        return redirect()->route('items.index')->with('success', 'Barang berhasil diupdate!');
+        return redirect()->route('items.show', $item->id)->with('success', 'Barang berhasil diupdate!');
     }
 
     /**
